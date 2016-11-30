@@ -1,5 +1,8 @@
 package FileManagement;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class Panel {
 	Tree tree;
     Page page;
