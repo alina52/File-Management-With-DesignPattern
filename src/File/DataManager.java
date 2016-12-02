@@ -90,7 +90,18 @@ public class DataManager {
         return get.get(pointers);
     }
 
-   
+    public static void save2disk() {
+        try {
+            FileWriter fw = new FileWriter("Data.txt");
+            fw.write(allData.substring(0, allData.length() / 2));
+            fw.write(allData.substring(allData.length() / 2, allData.length()));
+
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     private static List<Integer> getFreeBlockNumber(int number) {
         ArrayList<Integer> ret = new ArrayList<>();
@@ -174,4 +185,62 @@ public class DataManager {
     }
 
 
+private static class DataIterator {
+        final int BlockSize = 1024, PointerSize = 5, BlockNumber = 32;
+
+        int current ,index, pointer;
+        String text;
+
+        public DataIterator () {
+            current = 1;
+            calculateIndex();
+            calculatePointer();
+            calculateText();
+        }
+
+        public DataIterator (int c ) {
+            current = c;
+            calculateIndex();
+            calculatePointer();
+            calculateText();
+        }
+
+        private void calculateIndex(){
+            index = current * BlockSize;
+        }
+
+        private void calculatePointer(){
+            pointer = 0;
+            for(int i = index;i<index+5;i++){
+                if(allData.charAt(i)=='1'){
+                    pointer += Math.pow(2, (index + PointerSize) - i - 1);
+                }
+            }
+        }
+
+        private void calculateText(){
+            text = "";
+            for(int i = index + PointerSize;i < index + BlockSize; i ++) {
+                if(allData.charAt(i) == 0)
+                    break;
+                text += allData.charAt(i);
+            }
+        }
+
+        public boolean hasNext() {
+            if(current == 30)
+                return false;
+            else {
+                current ++;
+                calculateIndex();
+                calculatePointer();
+                calculateText();
+                return true;
+            }
+        }
+
+        public String getText() { return text; }
+        public int getCurrent() { return current; }
+        public int getPointer() { return pointer; }
+    }
 }
