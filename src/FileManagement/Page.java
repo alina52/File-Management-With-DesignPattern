@@ -94,7 +94,72 @@ public class Page extends JScrollPane {
     }
 
     private class ListMouseAdapter extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            int selected = select(e);
 
+            if (e.getClickCount() == 2) {
+                if (list.locationToIndex(e.getPoint()) == -1 && !e.isShiftDown()) {
+                    int currentId = FileTree.getCurrent();
+                    FileTreeItem fti = FileTree.findFileTreeItem(currentId);
+                    if(fti.getSelf() != 0) {
+                        FileTree.setCurrent(fti.getParent()
+                        );
+                    }
+                    return;
+                }
+
+                int selectedFileId = getSelectedId(selected);
+                File selectedFile = FileLoader.readFile(selectedFileId);
+                if(selectedFile.getIsFile()) {
+                    System.out.print("File "+ selectedFile.getName() +" is opened,");
+                    System.out.println("block " + selectedFile.getBlock());
+                    new EditFile(selectedFile,selectedFileId);
+                } else {
+                    FileTree.setCurrent(selectedFileId);
+                }
+
+            }
+
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            int selected = select(e),selectedFile = -1;
+            if (e.isPopupTrigger()) {
+                if (list.locationToIndex(e.getPoint()) == -1 && !e.isShiftDown()) {
+
+                } else {
+                    selectedFile = getSelectedId(selected);
+                }
+
+                PopupMenu popupMenu = new PopupMenu(selectedFile);
+                popupMenu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        }
+
+        private int getSelectedId(int selected) {
+            String name = list.getModel().getElementAt(selected * 4).toString();
+
+            File file = FileLoader.readFile(FileTree.getCurrent());
+            ArrayList<String> path = new ArrayList<>();
+            path.addAll(file.getLocation());
+            path.add(file.getName());
+
+
+            return FileTree.findByNameNPath(name,path);
+        }
+
+
+        public int select(MouseEvent e) {
+            int index = list.locationToIndex(e.getPoint()) / 4;
+            int indicesT[] = {index * 4, index * 4 + 1, index * 4 + 2, index * 4 + 3};
+            list.setSelectedIndices(indicesT);
+            if (list.locationToIndex(e.getPoint()) == -1 && !e.isShiftDown()) {
+                list.clearSelection();
+            }
+            return index;
+        }
     }
 
 
