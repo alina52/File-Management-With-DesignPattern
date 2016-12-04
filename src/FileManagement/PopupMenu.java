@@ -84,10 +84,108 @@ public class PopupMenu extends JPopupMenu {
         menuItems[3].addActionListener(e -> paste());
     }
 
+    private void copy() {
+        FileManager.setCopied(selectedFile);
+    }
+
+    private void paste() {
+        FileManager.toPaste();
+    }
+
 
     private void createFile() {
         new Dialog();
         FileManager.createFile(name);
         Page.createList(FileTree.getCurrent());
+    }
+
+    private void createFolder() {
+        new Dialog();
+        FileManager.createFolder(name);
+        Page.createList(FileTree.getCurrent());
+    }
+
+    private class Dialog extends JDialog {
+        private JTextField textField;
+
+        Dialog() {
+            super();
+            textField = new JTextField();
+            add(textField);
+            addWindowListener(new WindowAdapter(){
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    name = textField.getText();
+                    if (name.equals("")) {
+                        name = "Untitled";
+                    }
+                }
+            });
+            setTitle("Input a name");
+
+            setModal(true);
+            pack();
+            setBounds(300, 300, 100, 60);
+            setResizable(false);
+            setVisible(true);
+        }
+    }
+
+    private void delete() {
+        File file = FileLoader.readFile(selectedFile);
+        if (file.getIsFile()) {
+            delete(selectedFile, true);
+        } else {
+            deleteFolder(selectedFile);
+        }
+        Page.createList(FileTree.getCurrent());
+    }
+
+    private void deleteFolder(int id) {
+        FileTreeItem parent = FileTree.getFileTree().get(id);
+        ArrayList<Integer> children = (ArrayList<Integer>) FileTree.findChildren(parent);
+
+        for (int temp : children) {
+            File file = FileLoader.readFile(temp);
+            System.out.println("File "+file.getName() + " to be deleted");
+            if (file.getIsFile())
+                delete(temp, true);
+            else
+                deleteFolder(temp);
+        }
+        delete(id, false);
+    }
+
+    private void delete(int id, boolean isFile) {
+        if (isFile) {
+            File file = FileLoader.readFile(id);
+            int block = file.getBlock();
+            DataManager.deleteFile(block);
+
+            FileManager.modifyFolderVolume(id,-file.getVolume());
+        }
+        FileManager.removeFile(id);
+        FileTree.remove(id);
+    }
+
+    private void hideItems() {
+        if(selectedFile == -1){
+            menuItems[0].setEnabled(false);
+            menu[0].setEnabled(true);
+            menuItems[2].setEnabled(false);
+            if(FileManager.getCopied() != -1)
+                menuItems[3].setEnabled(true);
+            else
+                menuItems[3].setEnabled(false);
+            menuItems[4].setEnabled(false);
+        } else {
+            menuItems[0].setEnabled(true);
+            menuItems[2].setEnabled(true);
+            menuItems[3].setEnabled(false);
+            menu[0].setEnabled(false);
+            menuItems[4].setEnabled(true);
+        }
+
+
     }
 }

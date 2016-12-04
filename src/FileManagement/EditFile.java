@@ -1,5 +1,14 @@
 package FileManagement;
 
+import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Map;
+
+import File.*;
+
+
 public class EditFile {
 	public EditFile(File file, int id) {
         super("文件编辑");

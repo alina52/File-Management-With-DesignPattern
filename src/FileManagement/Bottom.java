@@ -33,4 +33,17 @@ public class Bottom extends JPanel {
         this.add(volume);
     }
 
+    public static void updateObjects(int objects) {
+        if(object == null)
+            object = new JLabel("  "+String.valueOf(objects)+"  个对象");
+        else
+            object.setText("  "+String.valueOf(objects)+"  个对象");
+    }
+
+    public static void updateVolume(int usedVolume,int totalVolume) {
+        double volumeValue = (double) (totalVolume - usedVolume) / 1024;
+        java.text.DecimalFormat df =new java.text.DecimalFormat("#.00");
+        volume.setText("共 30.00 MB  剩余 "+df.format(volumeValue)+" MB");
+    }
+
 }

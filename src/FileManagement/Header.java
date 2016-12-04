@@ -46,5 +46,13 @@ public class Header extends JPanel {
         this.add(findButton);
     }
 
-    
+    public static void showAddress() {
+        int id = FileTree.getCurrent();
+
+        File f=FileLoader.readFile(id);
+        if(address == null)
+            address = new TextField(f.getFullPath());
+        else
+            address.setText(f.getFullPath());
+    }
 }
