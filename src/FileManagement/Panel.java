@@ -3,7 +3,7 @@ package FileManagement;
 import javax.swing.*;
 import java.awt.*;
 
-public class Panel {
+public class Panel extends JScrollPane {
 	Tree tree;
     Page page;
 

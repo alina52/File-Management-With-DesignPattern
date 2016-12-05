@@ -9,7 +9,12 @@ import java.util.Map;
 import File.*;
 
 
-public class EditFile {
+public class EditFile extends JFrame{
+    private JTextArea textArea;
+    private String context;
+    private int id;
+    private ArrayList<Integer> pointers;
+
 	public EditFile(File file, int id) {
         super("文件编辑");
         setDefaultSettings();

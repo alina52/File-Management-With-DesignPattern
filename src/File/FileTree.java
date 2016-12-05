@@ -1,9 +1,5 @@
 package File;
 
-import FileManagement.Bottom;
-import FileManagement.Header;
-import FileManagement.Page;
-
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileTree extends IFileTree {
-    private final static int totalVolume = 30*1024;
+    public final static int totalVolume = 30*1024;
     private static File root;
     private static int current, objects, usedVolume;
     private static ArrayList<FileTreeItem> fileTree;
@@ -141,14 +137,14 @@ public class FileTree extends IFileTree {
     public static void setUsedVolumn(int usedVolumn) {
         FileTree.usedVolume = usedVolumn;
 
-        new observer().toNotifyVolume();
+        Observer.toNotifyVolume();
     }
 
     public static int getCurrent() { return current; }
     public static void setCurrent(int current) {
         FileTree.current = current;
 
-        new observer().toNotifyCurrent();
+        Observer.toNotifyCurrent();
     }
 
     public static List<FileTreeItem> getFileTree() {

@@ -1,8 +1,15 @@
-/**
- * Created by samsung on 2016/11/24.
- */
+import File.DataManager;
+import File.FileTree;
+import FileManagement.FileManagement;
+
 public class main {
-    public static void main(String[] args) {
+    final static int initial = 0;
+
+    public static void main(String[] argv){
+        FileTree ft = new FileTree(initial);
+        DataManager fm = new DataManager();
+
         FileManagement fileManagement = new FileManagement();
+
     }
 }
