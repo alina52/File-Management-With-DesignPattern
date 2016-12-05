@@ -126,7 +126,7 @@ public class Page extends JScrollPane {
         @Override
         public void mouseReleased(MouseEvent e) {
             int selected = select(e),selectedFile = -1;
-            if (e.isPopupTrigger()) {
+            if (e.isPopupTrigger() || e.isMetaDown()) {
                 if (list.locationToIndex(e.getPoint()) == -1 && !e.isShiftDown()) {
 
                 } else {
